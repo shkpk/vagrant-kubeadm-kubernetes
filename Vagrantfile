@@ -46,22 +46,22 @@ Vagrant.configure("2") do |config|
           #vb.customize ["modifyvm", :id, "--groups", ("/" + settings["cluster_name"])]
         end
     end
-    # master.vm.provision "shell",
-    #   env: {
-    #     "DNS_SERVERS" => settings["network"]["dns_servers"].join(" "),
-    #     "ENVIRONMENT" => settings["environment"],
-    #     "KUBERNETES_VERSION" => settings["software"]["kubernetes"],
-    #     "OS" => settings["software"]["os"]
-    #   },
-    #   path: "scripts/common.sh"
-    # master.vm.provision "shell",
-    #   env: {
-    #     "CALICO_VERSION" => settings["software"]["calico"],
-    #     "CONTROL_IP" => settings["network"]["control_ip"],
-    #     "POD_CIDR" => settings["network"]["pod_cidr"],
-    #     "SERVICE_CIDR" => settings["network"]["service_cidr"]
-    #   },
-    #   path: "scripts/master.sh"
+    master.vm.provision "shell",
+      env: {
+        "DNS_SERVERS" => settings["network"]["dns_servers"].join(" "),
+        "ENVIRONMENT" => settings["environment"],
+        "KUBERNETES_VERSION" => settings["software"]["kubernetes"],
+        "OS" => settings["software"]["os"]
+      },
+      path: "scripts/common.sh"
+    master.vm.provision "shell",
+      env: {
+        "CALICO_VERSION" => settings["software"]["calico"],
+        "CONTROL_IP" => settings["network"]["control_ip"],
+        "POD_CIDR" => settings["network"]["pod_cidr"],
+        "SERVICE_CIDR" => settings["network"]["service_cidr"]
+      },
+      path: "scripts/master.sh"
   end
 
   (1..NUM_WORKER_NODES).each do |i|
@@ -82,34 +82,21 @@ Vagrant.configure("2") do |config|
             #vb.customize ["modifyvm", :id, "--groups", ("/" + settings["cluster_name"])]
           end
       end
-    #   node.vm.provision "shell",
-    #     env: {
-    #       "DNS_SERVERS" => settings["network"]["dns_servers"].join(" "),
-    #       "ENVIRONMENT" => settings["environment"],
-    #       "KUBERNETES_VERSION" => settings["software"]["kubernetes"],
-    #       "OS" => settings["software"]["os"]
-    #     },
-    #     path: "scripts/common.sh"
-    #   node.vm.provision "shell", path: "scripts/node.sh"
+      node.vm.provision "shell",
+        env: {
+          "DNS_SERVERS" => settings["network"]["dns_servers"].join(" "),
+          "ENVIRONMENT" => settings["environment"],
+          "KUBERNETES_VERSION" => settings["software"]["kubernetes"],
+          "OS" => settings["software"]["os"]
+        },
+        path: "scripts/common.sh"
+      node.vm.provision "shell", path: "scripts/node.sh"
 
-      # Only install the dashboard after provisioning the last worker (and when enabled).
-    #   if i == NUM_WORKER_NODES and settings["software"]["dashboard"] and settings["software"]["dashboard"] != ""
-    #     node.vm.provision "shell", path: "scripts/dashboard.sh"
-    #   end
+      Only install the dashboard after provisioning the last worker (and when enabled).
+      if i == NUM_WORKER_NODES and settings["software"]["dashboard"] and settings["software"]["dashboard"] != ""
+        node.vm.provision "shell", path: "scripts/dashboard.sh"
+      end
     end
 
   end
 end
-
-
-#####
-#[vagrant@localhost ~]$ awk -F= '/^NAME/{print $2}' /etc/os-release
-#"CentOS Stream"
-# [vagrant@localhost ~]$ cat /etc/os-release | grep "PRETTY_NAME"
-# PRETTY_NAME="CentOS Stream 9"
-
-# vagrant@vagrant:~$ awk -F= '/^NAME/{print $2}' /etc/os-release
-# "Ubuntu"
-# vagrant@vagrant:~$ cat /etc/os-release | grep "PRETTY_NAME"
-# PRETTY_NAME="Ubuntu 22.04.2 LTS"
-

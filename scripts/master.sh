@@ -28,7 +28,7 @@ else
   mkdir -p $config_path
 fi
 
-cp -i /etc/kubernetes/admin.conf $config_path/config
+sudo cp -i /etc/kubernetes/admin.conf $config_path/config
 touch $config_path/join.sh
 chmod +x $config_path/join.sh
 
@@ -43,7 +43,7 @@ kubectl apply -f calico.yaml
 sudo -i -u vagrant bash << EOF
 whoami
 mkdir -p /home/vagrant/.kube
-sudo cp -i $config_path/config /home/vagrant/.kube/
+sudo cp -rf $config_path/config /home/vagrant/.kube/
 sudo chown 1000:1000 /home/vagrant/.kube/config
 EOF
 
