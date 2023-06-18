@@ -92,7 +92,7 @@ setup_centos() {
     sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$CRIO_OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
     sudo yum -y update
     sudo yum -y install cri-o
-    sudo systemctl status crio
+    # sudo systemctl status crio
     sudo systemctl start crio
     sudo systemctl enable crio
     if [[ $(uname -m) == "aarch64" ]] || [[ $(uname -m) == "arm64" ]]; then
