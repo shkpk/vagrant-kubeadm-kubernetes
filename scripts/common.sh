@@ -27,11 +27,6 @@ sudo sysctl --system
 
 VERSION="$(echo ${KUBERNETES_VERSION} | grep -oE '[0-9]+\.[0-9]+')"
 os_name=$(cat /etc/os-release | awk -F '=' '/^NAME/{print $2}' | awk '{print $1}' | tr -d '"')
-if [ "$os_name" == "Ubuntu" ]; then
-    setup_ubuntu
-elif [ "$os_name" == "CentOS" ]; then
-    setup_centos
-fi
 # Variable Declaration
 setup_ubuntu() {
     # DNS Setting
@@ -129,6 +124,11 @@ EOF
     sudo yum -y install jq
 }
 
+if [ "$os_name" == "Ubuntu" ]; then
+    setup_ubuntu
+elif [ "$os_name" == "CentOS" ]; then
+    setup_centos
+fi
 
 local_ip="$(ip --json a s | jq -r '.[] | if .ifname == "ens192" then .addr_info[] | if .family == "inet" then .local else empty end else empty end')"
 # sudo cat > /etc/default/kubelet << EOF
