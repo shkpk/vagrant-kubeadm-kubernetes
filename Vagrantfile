@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
       os_name=$(cat /etc/os-release | awk -F '=' '/^NAME/{print $2}' | awk '{print $1}' | tr -d '"')
       if [ "$os_name" == "Ubuntu" ]; then
         apt-get update -y
-      elif [ "$os_name" == "CentOS Stream" ]; then
+      elif [ "$os_name" == "CentOS" ]; then
         yum -y update
       fi
       echo "$IP_NW$((IP_START)) master-node" >> /etc/hosts
