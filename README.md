@@ -4,50 +4,24 @@ This repo is forked from https://github.com/techiescamp/vagrant-kubeadm-kubernet
 # Improvements
 1. Originally the code was for Ubuntu OS, however improvement is made to add support for CentOS.
 2. Now you can use amd or arm based CentOS to make your Kubernetes cluster.
-3. To use CentOS, you need to replace `box` in line number 33 of setting.yaml file to `shk/centos-stream-9`
-4. To use CentOS, you need to replace `box` in line number 33 of setting.yaml file to `shk/ubuntu-22.04`
+3. To use CentOS, you need to replace `box` in line number 33 of [settings.yaml](./settings.yaml) file to `shk/centos-stream-9`
+4. To use CentOS, you need to replace `box` in line number 33 of [settings.yaml](./settings.yaml) file to `shk/ubuntu-22.04`
 5. This code should work for `CentOS 8 Stream` and `Ubuntu 20.04`, but it is not yet tested.
 
-# Vagrantfile and Scripts to Automate Kubernetes Setup using Kubeadm [Practice Environment for CKA/CKAD and CKS Exams]
-
-## Documentation
-
-Current k8s version for CKA, CKAD, and CKS exam: 1.27
-
-Refer to this link for documentation: https://devopscube.com/kubernetes-cluster-vagrant/
-
-## 🚀 CKA, CKAD, CKS or KCNA Coupon Codes
-
-If you are preparing for CKA, CKAD, CKS, or KCNA exam, **save 40%**  at https://kube.promo/devops. It is a limited-time offer. Or Check out [Linux Foundation coupon](https://scriptcrunch.com/linux-foundation-coupon/) page for the latest voucher codes.
+# Change
+1. Originally this code was for Vagrant + Virtual box, however now this is changed to `VMWare Workstation` on Linux, and `VMWare Fusion` on Mac OS(Intel+M1).
 
 ## Prerequisites
 
 1. Working Vagrant setup
 2. 8 Gig + RAM workstation as the Vms use 3 vCPUS and 4+ GB RAM
 
-## For MAC/Linux Users
-
-The latest version of Virtualbox for Mac/Linux can cause issues.
-
-Create/edit the /etc/vbox/networks.conf file and add the following to avoid any network related issues.
-<pre>* 0.0.0.0/0 ::/0</pre>
-
-or run below commands
-
-```shell
-sudo mkdir -p /etc/vbox/
-echo "* 0.0.0.0/0 ::/0" | sudo tee -a /etc/vbox/networks.conf
-```
-
-So that the host only networks can be in any range, not just 192.168.56.0/21 as described here:
-https://discuss.hashicorp.com/t/vagrant-2-2-18-osx-11-6-cannot-create-private-network/30984/23
-
 ## Bring Up the Cluster
 
 To provision the cluster, execute the following commands.
 
 ```shell
-git clone https://github.com/scriptcamp/vagrant-kubeadm-kubernetes.git
+git clone https://github.com/shkpk/vagrant-kubeadm-kubernetes.git
 cd vagrant-kubeadm-kubernetes
 vagrant up
 ```
@@ -67,9 +41,9 @@ cp config ~/.kube/
 
 ## Install Kubernetes Dashboard
 
-The dashboard is automatically installed by default, but it can be skipped by commenting out the dashboard version in _settings.yaml_ before running `vagrant up`.
+The dashboard is automatically installed by default, but it can be skipped by commenting out the dashboard version in _[settings.yaml](./settings.yaml)_ before running `vagrant up`.
 
-If you skip the dashboard installation, you can deploy it later by enabling it in _settings.yaml_ and running the following:
+If you skip the dashboard installation, you can deploy it later by enabling it in _[settings.yaml](./settings.yaml)_ and running the following:
 ```shell
 vagrant ssh -c "/vagrant/scripts/dashboard.sh" master
 ```

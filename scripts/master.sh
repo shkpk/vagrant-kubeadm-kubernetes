@@ -10,7 +10,7 @@ sudo kubeadm config images pull
 
 echo "Preflight Check Passed: Downloaded All Required Images"
 
-sudo kubeadm init --apiserver-advertise-address=$CONTROL_IP --apiserver-cert-extra-sans=$CONTROL_IP --pod-network-cidr=$POD_CIDR --service-cidr=$SERVICE_CIDR --node-name "$NODENAME" --ignore-preflight-errors Swap
+sudo kubeadm init --apiserver-advertise-address="$CONTROL_IP" --apiserver-cert-extra-sans="$CONTROL_IP" --pod-network-cidr="$POD_CIDR" --service-cidr="$SERVICE_CIDR" --node-name "$NODENAME" --ignore-preflight-errors Swap
 
 mkdir -p "$HOME"/.kube
 sudo cp -i /etc/kubernetes/admin.conf "$HOME"/.kube/config
@@ -36,7 +36,7 @@ kubeadm token create --print-join-command > $config_path/join.sh
 
 # Install Calico Network Plugin
 
-curl https://raw.githubusercontent.com/projectcalico/calico/v${CALICO_VERSION}/manifests/calico.yaml -O
+curl https://raw.githubusercontent.com/projectcalico/calico/v"${CALICO_VERSION}"/manifests/calico.yaml -O
 
 kubectl apply -f calico.yaml
 
