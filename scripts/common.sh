@@ -124,6 +124,8 @@ EOF
     sudo yum -y update
     sudo yum -y install kubeadm-$KUBERNETES_VERSION kubelet-$KUBERNETES_VERSION kubectl-$KUBERNETES_VERSION --disableexcludes=kubernetes
     sudo yum -y install jq
+    sudo systemctl stop firewalld
+    sudo systemctl disable firewalld
 }
 
 if [ "$os_name" == "Ubuntu" ]; then
@@ -144,5 +146,3 @@ ${ENVIRONMENT}
 EOF
 
 sudo systemctl enable kubelet.service
-sudo systemctl stop firewalld
-sudo systemctl disable firewalld

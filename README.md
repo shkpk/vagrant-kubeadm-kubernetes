@@ -1,3 +1,12 @@
+# Disclaimer
+This repo is forked from https://github.com/techiescamp/vagrant-kubeadm-kubernetes, aimed to improve it for personal use.
+
+# Improvements
+1. Originally the code was for Ubuntu OS, however improvement is made to add support for CentOS.
+2. Now you can use amd or arm based CentOS to make your Kubernetes cluster.
+3. To use CentOS, you need to replace `box` in line number 33 of setting.yaml file to `shk/centos-stream-9`
+4. To use CentOS, you need to replace `box` in line number 33 of setting.yaml file to `shk/ubuntu-22.04`
+5. This code should work for `CentOS 8 Stream` and `Ubuntu 20.04`, but it is not yet tested.
 
 # Vagrantfile and Scripts to Automate Kubernetes Setup using Kubeadm [Practice Environment for CKA/CKAD and CKS Exams]
 
