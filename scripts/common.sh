@@ -39,6 +39,8 @@ DNS=${DNS_SERVERS}
 EOF
     sudo systemctl restart systemd-resolved
     # Install CRI-O Runtime
+    OS_VERSION_ID=$(cat /etc/os-release | awk -F '=' '/^VERSION_ID/{print $2}' | tr -d '"')
+    OS="xUbuntu_$OS_VERSION_ID"
     cat <<EOF | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
 deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /
 EOF
@@ -80,7 +82,7 @@ setup_centos() {
     sudo nmcli connection reload
     sudo systemctl restart NetworkManager.service
     FIND_OS=$(cat /etc/os-release | awk -F '=' '/^NAME/{print $2}' | tr -d '"')
-    cat /etc/os-release | awk -F '=' '/^NAME/{print $2}' | awk '{print $1}' | tr -d '"'
+    # cat /etc/os-release | awk -F '=' '/^NAME/{print $2}' | awk '{print $1}' | tr -d '"'
     if [[ "$FIND_OS" == "CentOS Stream" ]]; then
         OS_VERSION_ID=$(cat /etc/os-release | awk -F '=' '/^VERSION_ID/{print $2}' | tr -d '"')
         if [[ "$OS_VERSION_ID" == "9" ]]; then
