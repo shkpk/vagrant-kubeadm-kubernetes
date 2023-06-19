@@ -11,7 +11,12 @@ NUM_WORKER_NODES = settings["nodes"]["workers"]["count"]
 
 Vagrant.configure("2") do |config|
   config.vm.provision "shell", env: { "IP_NW" => IP_NW, "IP_START" => IP_START, "NUM_WORKER_NODES" => NUM_WORKER_NODES }, inline: <<-SHELL
-      apt-get update -y
+      os_name=$(cat /etc/os-release | awk -F '=' '/^NAME/{print $2}' | awk '{print $1}' | tr -d '"')
+      if [ "$os_name" == "Ubuntu" ]; then
+        apt-get update -y
+      elif [ "$os_name" == "CentOS" ]; then
+        yum -y update
+      fi
       echo "$IP_NW$((IP_START)) master-node" >> /etc/hosts
       for i in `seq 1 ${NUM_WORKER_NODES}`; do
         echo "$IP_NW$((IP_START+i)) worker-node0${i}" >> /etc/hosts
@@ -45,8 +50,8 @@ Vagrant.configure("2") do |config|
       env: {
         "DNS_SERVERS" => settings["network"]["dns_servers"].join(" "),
         "ENVIRONMENT" => settings["environment"],
-        "KUBERNETES_VERSION" => settings["software"]["kubernetes"],
-        "OS" => settings["software"]["os"]
+        "KUBERNETES_VERSION" => settings["software"]["kubernetes"]
+        # "OS" => settings["software"]["os"]
       },
       path: "scripts/common.sh"
     master.vm.provision "shell",
@@ -81,13 +86,13 @@ Vagrant.configure("2") do |config|
         env: {
           "DNS_SERVERS" => settings["network"]["dns_servers"].join(" "),
           "ENVIRONMENT" => settings["environment"],
-          "KUBERNETES_VERSION" => settings["software"]["kubernetes"],
-          "OS" => settings["software"]["os"]
+          "KUBERNETES_VERSION" => settings["software"]["kubernetes"]
+        #   "OS" => settings["software"]["os"]
         },
         path: "scripts/common.sh"
       node.vm.provision "shell", path: "scripts/node.sh"
 
-      # Only install the dashboard after provisioning the last worker (and when enabled).
+    #   Only install the dashboard after provisioning the last worker (and when enabled).
       if i == NUM_WORKER_NODES and settings["software"]["dashboard"] and settings["software"]["dashboard"] != ""
         node.vm.provision "shell", path: "scripts/dashboard.sh"
       end

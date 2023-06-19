@@ -55,7 +55,7 @@ EOF
   echo "Deploying the dashboard..."
   sudo -i -u vagrant kubectl apply -f "https://raw.githubusercontent.com/kubernetes/dashboard/v${DASHBOARD_VERSION}/aio/deploy/recommended.yaml"
 
-  sudo -i -u vagrant kubectl -n kubernetes-dashboard get secret/admin-user -o go-template="{{.data.token | base64decode}}" >> "${config_path}/token"
+  sudo -i -u vagrant kubectl -n kubernetes-dashboard get secret/admin-user -o go-template="{{.data.token | base64decode}}" | tee -a  "${config_path}/token"
   echo "The following token was also saved to: configs/token"
   cat "${config_path}/token"
   echo "
