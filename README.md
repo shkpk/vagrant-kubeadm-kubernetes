@@ -38,6 +38,11 @@ or you can copy the config file to .kube directory.
 ```shell
 cp config ~/.kube/
 ```
+## Deploying sample App
+```shell
+kubectl apply -f https://gist.githubusercontent.com/shkpk/3eff5c0125ed8fa04d679b1e47e4ef5a/raw/1a735e73e9b028d3425b2c0010a37b4e34eed3f9/sample-app.yaml
+```
+You should be able to access Nginx on any of the node’s IPs on port 32000. For example, http://10.0.0.11:32000
 
 ## Install Kubernetes Dashboard
 
