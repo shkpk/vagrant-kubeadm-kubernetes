@@ -62,7 +62,7 @@ EOF
 
     echo "CRI runtime installed susccessfully"
 
-    sudo apt-get update
+    sudo apt-get -y update
     sudo apt-get install -y apt-transport-https ca-certificates curl
     curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
 
