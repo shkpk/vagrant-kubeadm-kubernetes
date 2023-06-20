@@ -29,6 +29,34 @@ VERSION="$(echo "${KUBERNETES_VERSION}" | grep -oE '[0-9]+\.[0-9]+')"
 os_name=$(< /etc/os-release awk -F '=' '/^NAME/{print $2}' | awk '{print $1}' | tr -d '"')
 # Variable Declaration
 setup_ubuntu() {
+    # waiting for any pending update to finish
+    i=0
+    tput sc
+    while fuser /var/lib/dpkg/lock >/dev/null 2>&1 ; do
+        case $(($i % 4)) in
+            0 ) j="-" ;;
+            1 ) j="\\" ;;
+            2 ) j="|" ;;
+            3 ) j="/" ;;
+        esac
+        tput rc
+        echo -en "\r[$j] Waiting for other software managers to finish..."
+        sleep 0.5
+        ((i=i+1))
+    done
+
+    while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1 ; do
+        case $(($i % 4)) in
+            0 ) j="-" ;;
+            1 ) j="\\" ;;
+            2 ) j="|" ;;
+            3 ) j="/" ;;
+        esac
+        tput rc
+        echo -en "\r[$j] Waiting for other software managers to finish..."
+        sleep 0.5
+        ((i=i+1))
+    done
     # DNS Setting
     if [ ! -d /etc/systemd/resolved.conf.d ]; then
         sudo mkdir /etc/systemd/resolved.conf.d/
