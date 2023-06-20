@@ -29,6 +29,34 @@ VERSION="$(echo "${KUBERNETES_VERSION}" | grep -oE '[0-9]+\.[0-9]+')"
 os_name=$(< /etc/os-release awk -F '=' '/^NAME/{print $2}' | awk '{print $1}' | tr -d '"')
 # Variable Declaration
 setup_ubuntu() {
+    # waiting for any pending update to finish
+    i=0
+    tput sc
+    while fuser /var/lib/dpkg/lock >/dev/null 2>&1 ; do
+        case $(($i % 4)) in
+            0 ) j="-" ;;
+            1 ) j="\\" ;;
+            2 ) j="|" ;;
+            3 ) j="/" ;;
+        esac
+        tput rc
+        echo -en "\r[$j] Waiting for other software managers to finish..."
+        sleep 0.5
+        ((i=i+1))
+    done
+
+    while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1 ; do
+        case $(($i % 4)) in
+            0 ) j="-" ;;
+            1 ) j="\\" ;;
+            2 ) j="|" ;;
+            3 ) j="/" ;;
+        esac
+        tput rc
+        echo -en "\r[$j] Waiting for other software managers to finish..."
+        sleep 0.5
+        ((i=i+1))
+    done
     # DNS Setting
     if [ ! -d /etc/systemd/resolved.conf.d ]; then
         sudo mkdir /etc/systemd/resolved.conf.d/
@@ -64,12 +92,15 @@ EOF
 
     sudo apt-get -y update
     sudo apt-get install -y apt-transport-https ca-certificates curl
-    curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
-
-    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    if [[ -d /etc/apt/keyrings ]]; then
+        curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+        echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    else
+        curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg
+        echo "deb [signed-by=/etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    fi
     sudo apt-get update -y
     sudo apt-get install -y kubelet="$KUBERNETES_VERSION" kubectl="$KUBERNETES_VERSION" kubeadm="$KUBERNETES_VERSION"
-    sudo apt-get update -y
     sudo apt-get install -y jq
 }
 setup_centos() {
