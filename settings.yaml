@@ -30,7 +30,7 @@ nodes:
 #   - host_path: ../images
 #     vm_path: /vagrant/images
 software:
-  box: shk/centos-stream-9
+  box: shk/ubuntu-20.04
   calico: 3.26.0
   # To skip the dashboard installation, set its version to an empty value or comment it out:
   dashboard: 2.7.0
