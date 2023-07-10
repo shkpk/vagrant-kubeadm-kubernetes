@@ -57,6 +57,8 @@ setup_ubuntu() {
         sleep 0.5
         ((i=i+1))
     done
+    DEBIAN_FRONTEND=noninteractive
+    sudo apt install apt --upgrade && sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y && sudo apt autoremove -y
     # DNS Setting
     if [ ! -d /etc/systemd/resolved.conf.d ]; then
         sudo mkdir /etc/systemd/resolved.conf.d/
